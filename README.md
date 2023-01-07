@@ -31,6 +31,13 @@ See epoch train loss live graph at [`http://localhost:8097`](http://localhost:80
 
 The trained model will be exported as ONNX to `lenet.onnx`. The `lenet.onnx` file can be viewed with [Neutron](https://www.electronjs.org/apps/netron)
 
+# Testing
+
+```shell
+python -m unittest tests/unit.py # to run unit tests
+python -m unittest tests/integration.py # to run long-running integration test
+```
+
 ## References
 
 [[1](http://yann.lecun.com/exdb/publis/pdf/lecun-98.pdf)] Y. LeCun, L. Bottou, Y. Bengio, and P. Haffner. "Gradient-based learning applied to document recognition." Proceedings of the IEEE, 86(11):2278-2324, November 1998.
