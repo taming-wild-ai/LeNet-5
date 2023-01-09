@@ -2,14 +2,20 @@ import torch.nn as nn
 from collections import OrderedDict
 
 
-class C1(nn.Module):
-    def __init__(self):
-        super(C1, self).__init__()
+class C(nn.Module):
+    def __init__(
+        self,
+        in_channels=1,
+        out_channels=6,
+        conv_kernel_size=(5, 5),
+        pool_kernel_size=(2, 2),
+        pool_stride=2):
+        super(C, self).__init__()
 
         self.c1 = nn.Sequential(OrderedDict([
-            ('c1', nn.Conv2d(1, 6, kernel_size=(5, 5))),
+            ('c1', nn.Conv2d(in_channels, out_channels, kernel_size=conv_kernel_size)),
             ('relu1', nn.ReLU()),
-            ('s1', nn.MaxPool2d(kernel_size=(2, 2), stride=2))
+            ('s1', nn.MaxPool2d(kernel_size=pool_kernel_size, stride=pool_stride))
         ]))
 
     def forward(self, img):
@@ -17,27 +23,12 @@ class C1(nn.Module):
         return output
 
 
-class C2(nn.Module):
-    def __init__(self):
-        super(C2, self).__init__()
-
-        self.c2 = nn.Sequential(OrderedDict([
-            ('c2', nn.Conv2d(6, 16, kernel_size=(5, 5))),
-            ('relu2', nn.ReLU()),
-            ('s2', nn.MaxPool2d(kernel_size=(2, 2), stride=2))
-        ]))
-
-    def forward(self, img):
-        output = self.c2(img)
-        return output
-
-
 class C3(nn.Module):
-    def __init__(self):
+    def __init__(self, in_channels=16, out_channels=120, kernel_size=(5, 5)):
         super(C3, self).__init__()
 
         self.c3 = nn.Sequential(OrderedDict([
-            ('c3', nn.Conv2d(16, 120, kernel_size=(5, 5))),
+            ('c3', nn.Conv2d(in_channels, out_channels, kernel_size=kernel_size)),
             ('relu3', nn.ReLU())
         ]))
 
@@ -47,11 +38,11 @@ class C3(nn.Module):
 
 
 class F4(nn.Module):
-    def __init__(self):
+    def __init__(self, in_features=120, out_features=84):
         super(F4, self).__init__()
 
         self.f4 = nn.Sequential(OrderedDict([
-            ('f4', nn.Linear(120, 84)),
+            ('f4', nn.Linear(in_features, out_features)),
             ('relu4', nn.ReLU())
         ]))
 
@@ -61,11 +52,11 @@ class F4(nn.Module):
 
 
 class F5(nn.Module):
-    def __init__(self):
+    def __init__(self, in_features=84, out_features=10):
         super(F5, self).__init__()
 
         self.f5 = nn.Sequential(OrderedDict([
-            ('f5', nn.Linear(84, 10)),
+            ('f5', nn.Linear(in_features, out_features)),
             ('sig5', nn.LogSoftmax(dim=-1))
         ]))
 
@@ -82,9 +73,9 @@ class LeNet5(nn.Module):
     def __init__(self):
         super(LeNet5, self).__init__()
 
-        self.c1 = C1()
-        self.c2_1 = C2()
-        self.c2_2 = C2()
+        self.c1 = C()
+        self.c2_1 = C(in_channels=6, out_channels=16)
+        self.c2_2 = C(in_channels=6, out_channels=16)
         self.c3 = C3()
         self.f4 = F4()
         self.f5 = F5()
